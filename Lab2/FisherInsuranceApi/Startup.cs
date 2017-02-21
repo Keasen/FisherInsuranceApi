@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FisherInsuranceApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FisherInsuranceApi
 {
+    
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -28,6 +30,7 @@ namespace FisherInsuranceApi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddSingleton<IMemoryStore, MemoryStore>();
             services.AddMvc();
         }
 
@@ -39,5 +42,8 @@ namespace FisherInsuranceApi
 
             app.UseMvc();
         }
+
+       
     }
+    
 }
