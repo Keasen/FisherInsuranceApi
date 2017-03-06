@@ -7,41 +7,38 @@ namespace AutoController.Controllers {
 
 [Route("api/quotes")] 
 public class QuoteController : Controller { 
-    private IMemoryStore db;
+    private readonly FisherContext db;
 
-        public QuoteController(IMemoryStore repo)
+        public QuoteController(FisherContext context)
          {
-            db=repo;
+            db=context;
        
          }
-     [HttpGet]
-    public IActionResult GetQuotes()
-     {
-        return Ok(db.RetrieveAllQuotes);
-      }
-      [HttpGet("{id}")]
-      public IActionResult Get(int id)
-         {
-          return Ok(db.RetrieveQuote(id));
-         }
+     [HttpGet] public IActionResult GetQuotes() 
+     { return Ok(db.Quotes); }
 
-    [HttpPost] 
-    public IActionResult Post([FromBody] Quote quote) { 
-        return Ok(db.CreateQuote(quote)); }
+     [HttpGet("{id}", Name = "GetQuotes")] public IActionResult Get(int id) 
+     { return Ok(db.Quotes.Find(id)); }
 
-       
+     [HttpPost] public IActionResult Post([FromBody] Quote quote) 
+     { 
+         var newClaim = db.Quotes.Add(quote); db.SaveChanges(); 
+         return CreatedAtRoute("GetQuotes", new { id = quote.Id }, quote); }
 
-    [HttpPut("{id}")] 
-    public IActionResult Put([FromBody] Quote quote) 
-        { 
-        return Ok(db.UpdateQuote(quote));
-        }
+    [HttpPut("{id}")] public IActionResult Put(int id, [FromBody] Quote quote) 
+    { 
+        var newQuote = db.Quotes.Find(id); 
+        if (newQuote == null) { return NotFound(); } 
+        newQuote = quote; db.SaveChanges(); return Ok(newQuote);
+    }
 
-    [HttpDelete("{id}")] 
-    public IActionResult Delete (int id, [FromBody] Quote quote)
-       { 
-        db.DeleteQuote(id);
-        return Ok(); }
-}
+    [HttpDelete("{id}")] public IActionResult Delete(int id) {
+         var quoteToDelete = db.Quotes.Find(id); if (quoteToDelete == null) 
+         { return NotFound(); } 
+         db.Quotes.Remove(quoteToDelete); 
+         db.SaveChangesAsync(); 
+         return NoContent();
 
+                                                              }
+               }
 }
