@@ -10,18 +10,8 @@ namespace FisherInsuranceApi.Data
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { 
-            string connection = "User ID=keasen;Password=123;Host=localhost;Port=5433;Database=fisher-insurance;Pooling=true;"; 
+            string connection = "User ID=Keasen;Password=123;Host=localhost;Port=5432;Database=<Fisher-Insurance>;Pooling=true;";  
             optionsBuilder.UseNpgsql(connection); 
-        }
-
-        internal void SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void SaveChanges()
-        {
-            throw new NotImplementedException();
         }
     }    
 }
