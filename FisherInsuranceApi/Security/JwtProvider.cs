@@ -56,7 +56,7 @@ namespace FisherInsuranceApi.Security
                 return _next(httpContext);
             }
 
-            if (!httpContext.Request.Method.Equals("POST") && httpContext.Request.HasFormContentType)
+            if (httpContext.Request.Method.Equals("POST") && httpContext.Request.HasFormContentType)
             {
                 return CreateToken(httpContext);
             }
