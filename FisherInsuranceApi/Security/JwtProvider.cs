@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace FisherInsuranceApi.Security
 {
     public class JwtProvider
