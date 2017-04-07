@@ -21,18 +21,18 @@ namespace FisherInsuranceApi.Security
         private UserManager<ApplicationUser> UserManager;
         private SignInManager<ApplicationUser> SignInManager;
 
-
+        
         private static readonly string PrivateKey = "private_key_1234567890"; //never do this IRL; use something like https://vaultproject.io 
         public static readonly SymmetricSecurityKey SecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(PrivateKey));
 
         public static readonly string Issuer = "FisherInsurance";
-        public static string TokenEndPoint = "/api/connect/token";
+        public static string TokenEndPoint = "api/connect/token";
 
         public JwtProvider(RequestDelegate next, FisherContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _next = next;
 
-
+           
             this.db = db;
             UserManager = userManager;
             SignInManager = signInManager;
@@ -42,13 +42,21 @@ namespace FisherInsuranceApi.Security
             SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
 
         }
+
+
+        public JwtProvider(RequestDelegate next)
+        {
+            _next = next;
+        }
+
         public Task Invoke(HttpContext httpContext)
         {
-            if (!httpContext.Request.Path.Equals(TokenEndPoint, StringComparison.Ordinal))
+            if(!httpContext.Request.Path.Equals(TokenEndPoint, StringComparison.Ordinal))
             {
                 return _next(httpContext);
             }
-            if (httpContext.Request.Method.Equals("POST") && httpContext.Request.HasFormContentType)
+
+            if (!httpContext.Request.Method.Equals("POST") && httpContext.Request.HasFormContentType)
             {
                 return CreateToken(httpContext);
             }
@@ -87,8 +95,9 @@ namespace FisherInsuranceApi.Security
                         new Claim(JwtRegisteredClaimNames.Iss, Issuer),
                         new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(),
-                            ClaimValueTypes.Integer64)
+                        new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now)
+                                                                    .ToUnixTimeSeconds()
+                                                                    .ToString(), ClaimValueTypes.Integer64)
                     };
 
                     //create the actual token

@@ -12,10 +12,10 @@ import { LoginComponent } from './components/login/login.component';
 import { ClaimsComponent } from './components/claims/claims.component';
 import { QuotesComponent } from './components/quotes/quotes.component';
 
-import { AppRouting } from './app.routing';
-import { AuthHttp } from "./auth.http";
 import { AuthService } from "./auth.service";
 
+import { AuthHttp } from "./auth.http";
+import { AppRouting } from './app.routing';
 
 
 @NgModule({
@@ -38,6 +38,7 @@ import { AuthService } from "./auth.service";
     providers: [
         AuthService,
         AuthHttp
+
     ],
     bootstrap: [
         AppComponent
