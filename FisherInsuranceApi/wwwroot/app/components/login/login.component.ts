@@ -1,9 +1,8 @@
+
+import { AuthService } from '../../auth.service';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router'; 
-
-import { AuthService } from '../../auth.service'; 
-
+import { Router } from '@angular/router';
 @Component({
     selector: 'login',
     templateUrl: './app/components/login/login.component.html',
@@ -14,10 +13,7 @@ export class LoginComponent {
     loginForm = null;
     loginError = false;
 
-    constructor(
-        private fb: FormBuilder,
-        private router: Router,
-        private authService: AuthService) {
+    constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
         if (this.authService.isLoggedIn()) {
             this.router.navigate([""]);
         }
