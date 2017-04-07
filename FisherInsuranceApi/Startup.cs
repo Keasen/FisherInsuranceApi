@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
-
 namespace FisherInsuranceApi
 {
     public class Startup
@@ -42,13 +41,11 @@ namespace FisherInsuranceApi
 
             services.AddDbContext<FisherContext>();
             services.AddSingleton<DbSeeder>();
-
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
-        IHostingEnvironment env, ILoggerFactory loggerFactory, 
-        DbSeeder dbSeeder)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DbSeeder dbSeeder)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -79,14 +76,12 @@ namespace FisherInsuranceApi
             //app.UseIdentity();
             //or this
             //app.UseCookieAuthentication();
-
             app.UseMvc();
-            try 
-            {
-                 dbSeeder.SeedAsync().Wait(); 
+
+            try { 
+                dbSeeder.SeedAsync().Wait(); 
             } 
-            catch (AggregateException e) 
-            { 
+            catch (AggregateException e) { 
                 throw new Exception(e.ToString()); 
             }
         }
